@@ -44,9 +44,9 @@ export default class AddEntry extends Component {
 			}
 		});
 	}
-	slide = (metric, newValue) => {
-		this.setState((state) => ({
-			[metric]: newValue
+	slide = (metric, value) => {
+		this.setState(() => ({
+		  [metric]: value
 		}))
 	}
 	submit = () => {
@@ -88,7 +88,7 @@ export default class AddEntry extends Component {
 							{ type === 'slider'
 								? <UdaciSlider
 									value={value}
-									onChange={() => this.slide(key, value)}
+									onChange={(value) => this.slide(key, value)}
 									{...rest}
 								  />
 								: <UdaciSteppers
