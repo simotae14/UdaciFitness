@@ -7,6 +7,7 @@ import UdaciSteppers from './UdaciSteppers';
 import DateHeader from './DateHeader';
 import { Ionicons } from '@expo/vector-icons';
 import TextButton from './TextButton';
+import { submitEntry, removeEntry } from '../utils/api';
 
 function SubmitButton ({ onPress }) {
 	return (
@@ -70,7 +71,7 @@ export default class AddEntry extends Component {
 
 		// Navigate to home
 
-		// Save to 'DB'
+		submitEntry({ key, entry });
 
 		// Clear local notification to add data
 	}
@@ -81,13 +82,13 @@ export default class AddEntry extends Component {
 
 		// Route to the Home
 
-		// Update "DB"
+		removeEntry(key);
 	}
   	render() {
   		const metaInfo = getMetricMetaInfo();
 
 		// if user already has logged infos we will show him the message
-		if (true) {
+		if (this.props.alreadyLogged) {
 			return (
 				<View>
 					<Ionicons
