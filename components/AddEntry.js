@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity,Text } from 'react-native';
-import { getMetricMetaInfo, timeToString } from '../utils/helpers';
+import { getMetricMetaInfo, timeToString, getDailyReminderValue } from '../utils/helpers';
 
 import UdaciSlider from './UdaciSlider';
 import UdaciSteppers from './UdaciSteppers';
@@ -8,6 +8,8 @@ import DateHeader from './DateHeader';
 import { Ionicons } from '@expo/vector-icons';
 import TextButton from './TextButton';
 import { submitEntry, removeEntry } from '../utils/api';
+import { connect } from 'react-redux';
+import { addEntry } from '../actions';
 
 function SubmitButton ({ onPress }) {
 	return (
@@ -19,7 +21,7 @@ function SubmitButton ({ onPress }) {
 	);
 }
 
-export default class AddEntry extends Component {
+class AddEntry extends Component {
 	state = {
 		run: 0,
 		bike: 0,
@@ -59,6 +61,9 @@ export default class AddEntry extends Component {
 		const entry = this.state;
 
 		// Update Redux
+		this.props.dispatch(addEntry({
+			[key]: entry
+		}));
 
 		// reset the state
 		this.setState(() => ({
@@ -79,6 +84,9 @@ export default class AddEntry extends Component {
 		const key = timeToString();
 
 		// Update Redux
+		this.props.dispatch(addEntry({
+			[key]: getDailyReminderValue()
+		}))
 
 		// Route to the Home
 
@@ -128,10 +136,19 @@ export default class AddEntry extends Component {
 						</View>
 					);
 				})}
+				<SubmitButton
+					onPress={this.submit}
+				/>
 			</View>
 		);
-		<SubmitButton
-			onPress={this.submit}
-		/>
 	}
 }
+
+function mapStateToProps(state) {
+	const key = timeToString();
+	return {
+		alreadyLogged: state[key] && state[key].today === undefined
+	};
+}
+
+export default connect(mapStateToProps)(AddEntry);
